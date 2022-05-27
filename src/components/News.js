@@ -6,10 +6,10 @@ export class News extends Component {
   articles = [ ]
   constructor() {
     super();
-    console.log("Hellollll from news comp");
     this.state = {
       articles: this.articles,
-      loading: false
+      loading: false,
+      page: 1
     }
   }
 
@@ -17,8 +17,29 @@ export class News extends Component {
     let url = "https://newsapi.org/v2/top-headlines?country=in&category=business&apiKey=0f40b84c556c491c9b12e1c4584cebd9"
     let data = await fetch(url);
     let parsedData = await data.json();
-    
     this.setState({articles: parsedData.articles})
+  }
+
+  handlePrevClick = async ()=> {
+    console.log("Prev");
+    let url = `https://newsapi.org/v2/top-headlines?country=in&category=business&apiKey=0f40b84c556c491c9b12e1c4584cebd9&page=${this.state.page - 1}`;
+    let data = await fetch(url);
+    let parsedData = await data.json();
+    this.setState({articles: parsedData.articles});
+    this.setState({
+      page : this.page - 1
+    })
+  }
+  handleNextClick = async ()=> {
+    console.log("Next");
+    let url = `https://newsapi.org/v2/top-headlines?country=in&category=business&apiKey=0f40b84c556c491c9b12e1c4584cebd9&page=${this.state.page + 1}`;
+    let data = await fetch(url);
+    let parsedData = await data.json();
+    this.setState({articles: parsedData.articles});
+    this.setState({
+      page : this.page + 1
+    })
+
   }
 
 
@@ -34,7 +55,10 @@ export class News extends Component {
                 </div>
                 ;
             })}
-
+          </div>
+          <div className="conatiner d-flex justify-content-between">
+          <button disabled={this.state.page<=1} type="button" className="btn btn-primary" onClick={this.handlePrevClick}> &larr; Previous</button>
+          <button type="button" className="btn btn-primary" onClick={this.handleNextClick}>Next &rarr;</button>
           </div>
         </div>
       </>
